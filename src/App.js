@@ -69,6 +69,14 @@ class App extends Component {
     })
   }
 
+  del = (index) => {
+    console.log(index)
+    this.state.empList.splice(index,1);
+    this.setState({
+      empList: [...this.state.empList]
+    })
+  }
+
   addEmployee = () => {
     const {name,addEmail,salary} = this.state;
     const today = new Date();
@@ -134,6 +142,7 @@ class App extends Component {
     handleChange={this.handleChange}
     empList={this.state.empList}
     logout={this.logout}
+    del={this.del}
     />
     ) 
     : 

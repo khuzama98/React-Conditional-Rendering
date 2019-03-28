@@ -31,7 +31,7 @@ class ShowTable extends Component {
                         <button className="waves-effect waves-light btn blue">
                             Edit
                         </button>
-                        <button style={marginLeft} className="waves-effect waves-light btn red">
+                        <button onClick={()=>this.props.del(index)} style={marginLeft} className="waves-effect waves-light btn red">
                             Delete
                         </button>
                     </td>
