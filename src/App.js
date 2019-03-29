@@ -13,6 +13,7 @@ class App extends Component {
     this.state={
       isToggle: false,
       isLoggedIn: false,
+      // isEdit:false,
       email:'',
       password:'',
       empList: [],
@@ -23,6 +24,17 @@ class App extends Component {
       salary:'',
     }
   }
+
+  
+  // toggleEdit = (item,index) => {
+  //   this.setState({
+  //       isEdit:true,
+  //       name:item.name,
+  //       lastName:item.lastName,
+  //       addEmail:item.addEmail,
+  //       salary:item.salary,
+  //   })
+// }
 
   toggleText = () => {
     this.setState({isToggle:(!this.state.isToggle)})
@@ -62,7 +74,7 @@ class App extends Component {
     return email.length===0 || password.length===0
   }
 
-  handleChange=(event)=> {
+   handleChange=(event)=> {
     const {name, value} = event.target
     this.setState({
         [name]: value
@@ -77,12 +89,26 @@ class App extends Component {
     })
   }
 
+  editItem = (userObj,index) => {
+    this.state.empList[index] = userObj;
+    this.setState({
+      empList: [...this.state.empList]
+    })
+    swal({
+      icon: 'success',
+      text: 'updated successfully!'
+    })
+  }
+
+  
+
   addEmployee = () => {
-    const {name,addEmail,salary} = this.state;
+    const {name,addEmail,lastName,salary} = this.state;
     const today = new Date();
     const date = today.getDate() +'-'+(today.getMonth()+1)+'-'+ today.getFullYear();
     const emp = {
       name,
+      lastName,
       addEmail,
       salary,
       date
@@ -139,8 +165,16 @@ class App extends Component {
     :
     <ShowTable 
     toggleView={this.toggleView}
-    handleChange={this.handleChange}
+    editItem={this.editItem}
     empList={this.state.empList}
+    // handleChange={this.handleChange}
+    // name={this.state.name}
+    // lastName={this.state.lastName}
+    // addEmail={this.state.addEmail}
+    // salary={this.state.salary}
+    // addEmployee={this.addEmployee}
+    // toggleEdit={this.toggleEdit}
+    // isDisabledEmployee={this.isDisabledEmployee}
     logout={this.logout}
     del={this.del}
     />

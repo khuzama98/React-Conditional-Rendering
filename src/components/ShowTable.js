@@ -1,15 +1,86 @@
 import React, {Component} from 'react';
+import EditModal from './EditModal';
 import 'materialize-css/dist/css/materialize.min.css';
 import M from "materialize-css";
 
 class ShowTable extends Component {
+    constructor(){
+        super()
+        this.state={
+            isEdit:false,
+            name:'',
+            lastName:'',
+            addEmail:'',
+            salary:'',
+            date:'',
+            indexToEdit:'',
+            // empList:[]
+        }
+    }
 
     componentDidMount(){
         M.AutoInit();
     }
 
-    render(){
+    toggleEdit = (item,index) => {
+        this.setState({
+            isEdit:true,
+            name:item.name,
+            lastName:item.lastName,
+            addEmail:item.addEmail,
+            salary:item.salary,
+            date:item.date,
+            indexToEdit:index
+        })
+    }
 
+    isDisabledEmployees = () => {
+        const {name,lastName,addEmail,salary} = this.state;
+        return name.length===0 || lastName.length===0 || addEmail.length===0 || salary.length===0
+    
+    }
+
+    updateItem = () => {
+        const {name,addEmail,lastName,salary,date,indexToEdit} = this.state;
+        const emp = {
+            name,
+            lastName,
+            addEmail,
+            salary,
+            date,
+        }
+        this.props.editItem(emp,indexToEdit)
+            this.setState({
+                isEdit:false,
+                name:'',
+                lastName:'',
+                addEmail:'',
+                salary:'',
+                date:'',
+                indexToEdit:'',
+            })
+    }
+
+    cancelUpdate = () =>{
+        this.setState({
+            isEdit:false,
+            name:'',
+            lastName:'',
+            addEmail:'',
+            salary:'',
+            date:'',
+            indexToEdit:'',
+        })
+    }
+
+    handleChanges=(event)=> {
+        const {name, value} = event.target
+        this.setState({
+            [name]: value
+        })
+      }
+    
+    renderList = () => {
         let margin= {
             marginRight: '25px'
         }
@@ -28,7 +99,7 @@ class ShowTable extends Component {
                     <td>{item.salary}</td>
                     <td>{item.date}</td>
                     <td>
-                        <button className="waves-effect waves-light btn blue">
+                        <button onClick={()=>this.toggleEdit(item,index)} className="waves-effect waves-light btn blue" >
                             Edit
                         </button>
                         <button onClick={()=>this.props.del(index)} style={marginLeft} className="waves-effect waves-light btn red">
@@ -41,7 +112,7 @@ class ShowTable extends Component {
 
         return(
             <div>
-                <div style={marginTop} className='right-align' > 
+            <div style={marginTop} className='right-align' > 
                     <button 
                         style={margin}
                         onClick={()=>this.props.logout()}
@@ -71,6 +142,29 @@ class ShowTable extends Component {
                     </button>
      
                 </div>
+            </div>
+        )
+    }
+
+
+    render(){
+        const {isEdit} = this.state;
+       
+        let toDisplay = isEdit ? <EditModal
+        name={this.state.name}
+        handleChanges={this.handleChanges}               
+        lastName={this.state.lastName}
+        addEmail={this.state.addEmail}
+        salary={this.state.salary}
+        updateItem={this.updateItem}
+        cancelUpdate={this.cancelUpdate}
+        isDisabledEmployees={this.isDisabledEmployees}
+        /> : this.renderList()
+        
+
+        return(
+            <div>
+                {toDisplay}
             </div>        
         )
     }
